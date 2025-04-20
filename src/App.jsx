@@ -1,72 +1,72 @@
-// Importamos herramientas de React y nuestros componentes
-import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Para generar un ID único por cada tarea
-import TaskForm from './components/TaskForm/TaskForm'; // El formulario para escribir una tarea
-import TaskList from './components/TaskList/TaskList'; // La lista que muestra todas las tareas
-import TaskFilter from './components/TaskFilter/TaskFilter'; // Botones para mostrar solo algunas tareas
-import TaskStats from './components/TaskStats/TaskStats'; // Muestra cuántas tareas hay y cuántas faltan
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import TaskFilter from './components/TaskFilter/TaskFilter';
+import TaskForm from './components/TaskForm/TaskForm';
+import TaskList from './components/TaskList/TaskList';
 
-// Esta es una tarea de ejemplo, por si el usuario nunca guardó ninguna
 const initialTasks = [
   {
-    id: uuidv4(), // Genera un ID único
-    title: "Aprender React", // El nombre de la tarea
-    description: "Estudiar los fundamentos de React", // Una descripción opcional
-    completed: false, // Dice si ya la hiciste o no
-    createdAt: new Date() // Cuándo fue creada
+    id: uuidv4(),
+    title: "Aprender React",
+    description: "Estudiar los fundamentos de React",
+    completed: false,
+    createdAt: new Date()
   }
 ];
 
 function App() {
-  // Guardamos las tareas. Si hay tareas guardadas en el navegador, usamos esas. Si no, usamos la de ejemplo.
   const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem('tasks'); // Busca si hay tareas guardadas
-    return savedTasks ? JSON.parse(savedTasks) : initialTasks;
+    const saved = localStorage.getItem('tasks');
+    return saved ? JSON.parse(saved) : initialTasks;
   });
 
-  // Este valor indica qué tipo de tareas queremos ver (todas, solo activas o solo completadas)
   const [filter, setFilter] = useState('Todas');
-
-  // Acá guardamos si estamos editando una tarea (y cuál)
   const [editingTask, setEditingTask] = useState(null);
 
-  // Cada vez que cambia la lista de tareas, la guardamos en el navegador
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
-  // Según el filtro seleccionado, mostramos solo ciertas tareas
+  // Calcular estadísticas
+  const total = tasks.length;
+  const pending = tasks.filter(t => !t.completed).length;
+
+  // Filtrar tareas según el filtro seleccionado
   const filteredTasks = tasks.filter(task => {
-    if (filter === 'Activas') return !task.completed; // Muestra solo las no hechas
-    if (filter === 'Completadas') return task.completed; // Muestra solo las hechas
-    return true; // Si el filtro es "Todas", muestra todo
+    if (filter === 'Activo') return !task.completed;
+    if (filter === 'Completada') return task.completed;
+    return true;
   });
 
   return (
-    // Contenedor principal con algo de estilo (centrado, márgenes, color de texto)
-    <div className="max-w-2xl mx-auto p-4 text-white">
-      {/* Título grande de la app */}
-      <h1 className="text-3xl font-bold text-primary mb-6">Gestión de Tareas</h1>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+        {/* Encabezado con estadísticas arriba */}
+        <header className="mb-6">
+          <h1 className="text-3xl font-bold text-primary">Gestión de Tareas</h1>
+          <div className="mt-2 flex space-x-6 text-sm text-text">
+            <span>Total de tareas: <strong>{total}</strong></span>
+            <span>Pendientes: <strong>{pending}</strong></span>
+          </div>
+        </header>
 
-      {/* Componente para crear nuevas tareas o editar una existente */}
-      <TaskForm
-        tasks={tasks}
-        setTasks={setTasks}
-        editingTask={editingTask}
-        setEditingTask={setEditingTask}
-      />
+        <TaskForm
+          tasks={tasks}
+          setTasks={setTasks}
+          editingTask={editingTask}
+          setEditingTask={setEditingTask}
+        />
 
-      {/* Botones para elegir qué tareas mostrar */}
-      <TaskFilter filter={filter} setFilter={setFilter} />
+        <TaskFilter filter={filter} setFilter={setFilter} />
 
-      {/* Lista de tareas filtradas que se muestra en pantalla */}
-      <TaskList tasks={filteredTasks} setTasks={setTasks} setEditingTask={setEditingTask} />
-
-      {/* Muestra un resumen: cuántas tareas hay y cuántas están pendientes */}
-      <TaskStats tasks={tasks} />
+        <TaskList
+          tasks={filteredTasks}
+          setTasks={setTasks}
+          setEditingTask={setEditingTask}
+        />
+      </div>
     </div>
   );
 }
 
-// Exportamos el componente para que lo pueda usar toda la app
 export default App;
