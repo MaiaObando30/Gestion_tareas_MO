@@ -1,14 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
-  const [title, setTitle]         = useState('');
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  // Referencia para el campo de descripción
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     if (editingTask) {
       setTitle(editingTask.title);
       setDescription(editingTask.description);
+      // Enfocar el campo de descripción al editar una tarea
+      descriptionRef.current?.focus();
     }
   }, [editingTask]);
 
@@ -46,21 +51,21 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
         placeholder="Título de la tarea"
         className="w-full p-2 rounded bg-secondary text-text border border-gray-300 placeholder:text-muted"
         value={title}
+        maxLength={50}
         autoFocus
-        pattern='[A-Za-z0-9]{3,50}'
-        onChange={(e) => {
-          setTitle(e.target.value);
-          if (editingTask.target.value.trim())
-          (""); //borrar el error si sd escribe algo mal   
-        }}
+        onChange={(e) => setTitle(e.target.value)}
       />
+      <p className="text-xs text-muted text-right">{title.length}/50 caracteres</p>
 
       <textarea
+        ref={descriptionRef}  // Referencia al campo de descripción
         placeholder="Descripción"
         className="w-full p-2 rounded bg-secondary text-text border border-gray-300 placeholder:text-muted"
         value={description}
         onChange={e => setDescription(e.target.value)}
+        maxLength={200}
       />
+      <p className="text-xs text-muted text-right">{description.length}/200 caracteres</p>
 
       <div className="flex justify-end">
         <button
