@@ -27,15 +27,16 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
       ));
       setEditingTask(null);
     } else {
+      // Agregar la nueva tarea al principio del array
       setTasks([
-        ...tasks,
         {
           id: uuidv4(),
           title,
           description,
           completed: false,
           createdAt: new Date()
-        }
+        },
+        ...tasks
       ]);
     }
 
