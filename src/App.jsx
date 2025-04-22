@@ -4,15 +4,16 @@ import TaskFilter from './components/TaskFilter/TaskFilter';
 import TaskForm from './components/TaskForm/TaskForm';
 import TaskList from './components/TaskList/TaskList';
 
-const initialTasks = [
-  {
-    id: uuidv4(),
-    title: "Aprender React",
-    description: "Estudiar los fundamentos de React",
-    completed: false,
-    createdAt: new Date()
-  }
-];
+  const initialTasks = [
+    {
+      id: uuidv4(),
+      title: "Aprender React",
+      description: "Estudiar los fundamentos de React",
+      completed: false,
+      createdAt: new Date()
+    }
+  ];
+  
 
 function App() {
   const [tasks, setTasks] = useState(() => {

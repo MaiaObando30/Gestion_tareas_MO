@@ -24,9 +24,9 @@ const TaskItem = ({ task, setTasks, setEditingTask }) => {
       </div>
 
       <div className="flex flex-row sm:flex-col items-center gap-2 sm:ml-4">
-        <button onClick={toggleComplete} className="text-green-400 hover:scale-110">✓</button>
-        <button onClick={() => setEditingTask(task)} className="text-yellow-400 hover:scale-110">✎</button>
-        <button onClick={deleteTask} className="text-red-500 hover:scale-110">✗</button>
+        <button onClick={toggleComplete} className="text-green-400 hover:scale-200">✓</button>
+        <button onClick={() => setEditingTask(task)} className="text-yellow-600 hover:scale-110">✎</button>
+        <button onClick={deleteTask} className="text-red-500 hover:scale-200">✗</button>
       </div>
     </div>
   );
