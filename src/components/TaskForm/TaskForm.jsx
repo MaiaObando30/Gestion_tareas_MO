@@ -54,6 +54,7 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
         value={title}
         maxLength={50}
         autoFocus
+        pattern='[A-Za-z0-9 ]{3,50}'
         onChange={(e) => setTitle(e.target.value)}
       />
       <p className="text-xs text-muted text-right">{title.length}/50 caracteres</p>
